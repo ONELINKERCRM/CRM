@@ -1,0 +1,106 @@
+project_id = "zyqlwkkiyuqnhlvnuewk"
+
+[functions.invite-agent]
+verify_jwt = true
+
+[functions.chatbot-chat]
+verify_jwt = false
+
+[functions.fetch-property-finder-leads]
+verify_jwt = true
+
+[functions.property-finder-webhook]
+verify_jwt = false
+
+[functions.meta-oauth]
+verify_jwt = false
+
+[functions.lead-source-webhook]
+verify_jwt = false
+
+[functions.lead-source-fetch]
+verify_jwt = true
+
+[functions.tiktok-integration]
+verify_jwt = false
+
+[functions.tiktok-webhook]
+verify_jwt = false
+
+[functions.portal-webhook]
+verify_jwt = false
+
+[functions.portal-leads-fetch]
+verify_jwt = true
+
+[functions.website-form-submit]
+verify_jwt = false
+
+[functions.website-form-embed]
+verify_jwt = false
+
+[functions.whatsapp-campaign-execute]
+verify_jwt = true
+
+[functions.whatsapp-webhook]
+verify_jwt = false
+
+[functions.campaign-audience-import]
+verify_jwt = true
+
+[functions.campaign-execute]
+verify_jwt = true
+
+[functions.whatsapp-embedded-signup]
+verify_jwt = false
+
+[functions.marketing-webhook]
+verify_jwt = false
+
+[functions.campaign-scheduler]
+verify_jwt = true
+
+[functions.campaign-retry]
+verify_jwt = true
+
+[functions.campaign-analytics]
+verify_jwt = true
+
+[functions.chatbot-manage]
+verify_jwt = true
+
+[functions.chatbot-webhook]
+verify_jwt = false
+
+[functions.connection-manage]
+verify_jwt = true
+
+[functions.listing-manage]
+verify_jwt = true
+
+[functions.listing-portal-sync]
+verify_jwt = false
+
+[functions.portal-publish]
+verify_jwt = true
+
+[functions.location-search]
+verify_jwt = true
+
+[functions.meta-lead-webhook]
+verify_jwt = false
+
+[functions.pf-publish]
+verify_jwt = true
+
+[functions.pf-webhook]
+verify_jwt = false
+
+[functions.pf-locations]
+verify_jwt = true
+
+[functions.pf-agents]
+verify_jwt = true
+
+[functions.pf-lead-webhook]
+verify_jwt = false

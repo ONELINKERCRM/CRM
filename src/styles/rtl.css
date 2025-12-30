@@ -1,0 +1,394 @@
+/* RTL (Right-to-Left) Support for Arabic Language */
+
+/* Global RTL Adjustments */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: start;
+}
+
+/* Flip Flex Direction */
+[dir="rtl"] .flex-row-reverse {
+    flex-direction: row;
+}
+
+[dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+}
+
+/* Text Alignment */
+[dir="rtl"] .text-left {
+    text-align: right;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left;
+}
+
+/* Float */
+[dir="rtl"] .float-left {
+    float: right;
+}
+
+[dir="rtl"] .float-right {
+    float: left;
+}
+
+/* Margins - Convert to Logical Properties */
+[dir="rtl"] .ml-auto {
+    margin-inline-start: auto;
+    margin-left: unset;
+}
+
+[dir="rtl"] .mr-auto {
+    margin-inline-end: auto;
+    margin-right: unset;
+}
+
+/* Padding - Convert to Logical Properties */
+[dir="rtl"] .pl-0 {
+    padding-inline-start: 0;
+    padding-left: unset;
+}
+
+[dir="rtl"] .pr-0 {
+    padding-inline-end: 0;
+    padding-right: unset;
+}
+
+/* Border Radius - Flip for RTL */
+[dir="rtl"] .rounded-l {
+    border-start-start-radius: 0.375rem;
+    border-end-start-radius: 0.375rem;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+}
+
+[dir="rtl"] .rounded-r {
+    border-start-end-radius: 0.375rem;
+    border-end-end-radius: 0.375rem;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+}
+
+/* Transform - Flip Rotations */
+[dir="rtl"] .rotate-90 {
+    transform: rotate(-90deg);
+}
+
+[dir="rtl"] .rotate-180 {
+    transform: rotate(180deg);
+}
+
+[dir="rtl"] .-rotate-90 {
+    transform: rotate(90deg);
+}
+
+/* Chevron and Arrow Icons - Auto Flip */
+[dir="rtl"] svg[class*="chevron"],
+[dir="rtl"] svg[class*="arrow"] {
+    transform: scaleX(-1);
+}
+
+/* Dropdown Menus */
+[dir="rtl"] [role="menu"],
+[dir="rtl"] [role="listbox"],
+[dir="rtl"] .dropdown-menu {
+    left: auto;
+    right: 0;
+}
+
+/* Tooltips */
+[dir="rtl"] [data-side="right"] {
+    left: auto;
+    right: 100%;
+}
+
+[dir="rtl"] [data-side="left"] {
+    right: auto;
+    left: 100%;
+}
+
+/* Modals and Dialogs */
+[dir="rtl"] .modal-content,
+[dir="rtl"] .dialog-content {
+    text-align: start;
+}
+
+/* Forms */
+[dir="rtl"] input[type="tel"],
+[dir="rtl"] input[type="number"] {
+    direction: ltr;
+    text-align: right;
+}
+
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="url"] {
+    direction: ltr;
+    text-align: right;
+}
+
+/* Checkboxes and Radio Buttons */
+[dir="rtl"] input[type="checkbox"],
+[dir="rtl"] input[type="radio"] {
+    margin-inline-end: 0.5rem;
+    margin-inline-start: 0;
+}
+
+/* Tables */
+[dir="rtl"] table {
+    direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+    text-align: start;
+}
+
+/* Breadcrumbs */
+[dir="rtl"] .breadcrumb-separator::before {
+    content: "\\";
+    transform: scaleX(-1);
+}
+
+/* Scrollbar */
+[dir="rtl"] ::-webkit-scrollbar {
+    left: 0;
+    right: auto;
+}
+
+/* Sidebar Specific */
+[dir="rtl"] aside {
+    left: auto;
+    right: 0;
+}
+
+/* Badge Positioning */
+[dir="rtl"] .badge-top-right {
+    left: 0;
+    right: auto;
+}
+
+[dir="rtl"] .badge-top-left {
+    right: 0;
+    left: auto;
+}
+
+/* Animation Direction */
+@keyframes slideInRightRTL {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeftRTL {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+[dir="rtl"] .slide-in-right {
+    animation-name: slideInRightRTL;
+}
+
+[dir="rtl"] .slide-in-left {
+    animation-name: slideInLeftRTL;
+}
+
+/* Select Dropdown Arrow */
+[dir="rtl"] select {
+    background-position: left 0.5rem center;
+    padding-left: 2.5rem;
+    padding-right: 0.75rem;
+}
+
+/* Progress Bars */
+[dir="rtl"] .progress-bar {
+    direction: ltr;
+}
+
+/* Notification Positioning */
+[dir="rtl"] .notification-container {
+    left: auto;
+    right: 1rem;
+}
+
+/* Card Actions */
+[dir="rtl"] .card-actions {
+    justify-content: flex-start;
+}
+
+/* List Items with Icons */
+[dir="rtl"] .list-item-icon {
+    margin-inline-end: 0.75rem;
+    margin-inline-start: 0;
+}
+
+/* Avatar Groups */
+[dir="rtl"] .avatar-group .avatar:not(:first-child) {
+    margin-inline-start: -0.5rem;
+    margin-inline-end: 0;
+}
+
+/* Stepper/Wizard */
+[dir="rtl"] .stepper-line {
+    left: auto;
+    right: 50%;
+}
+
+/* Timeline */
+[dir="rtl"] .timeline-item::before {
+    left: auto;
+    right: 0;
+}
+
+/* Tabs */
+[dir="rtl"] .tabs-list {
+    direction: rtl;
+}
+
+/* Accordion */
+[dir="rtl"] .accordion-trigger svg {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+}
+
+/* Command Palette */
+[dir="rtl"] .command-input {
+    padding-inline-start: 1rem;
+    padding-inline-end: 2.5rem;
+}
+
+/* Date Picker */
+[dir="rtl"] .calendar {
+    direction: rtl;
+}
+
+[dir="rtl"] .calendar-day {
+    text-align: center;
+}
+
+/* Combobox */
+[dir="rtl"] .combobox-trigger svg {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+}
+
+/* Context Menu */
+[dir="rtl"] .context-menu-item svg {
+    margin-inline-end: 0.5rem;
+    margin-inline-start: auto;
+}
+
+/* Navigation Menu */
+[dir="rtl"] .nav-menu-trigger svg {
+    margin-inline-start: 0.25rem;
+    margin-inline-end: 0;
+}
+
+/* Popover */
+[dir="rtl"] .popover-content {
+    text-align: start;
+}
+
+/* Sheet/Drawer */
+[dir="rtl"] .sheet-left {
+    left: auto;
+    right: 0;
+}
+
+[dir="rtl"] .sheet-right {
+    right: auto;
+    left: 0;
+}
+
+/* Toast Notifications */
+[dir="rtl"] .toast {
+    left: auto;
+    right: 1rem;
+}
+
+[dir="rtl"] .toast-close {
+    left: 0.5rem;
+    right: auto;
+}
+
+/* Utility Classes for RTL */
+.rtl\:flex-row-reverse[dir="rtl"] {
+    flex-direction: row-reverse;
+}
+
+.rtl\:text-right[dir="rtl"] {
+    text-align: right;
+}
+
+.rtl\:text-left[dir="rtl"] {
+    text-align: left;
+}
+
+.rtl\:ml-auto[dir="rtl"] {
+    margin-inline-start: auto;
+}
+
+.rtl\:mr-auto[dir="rtl"] {
+    margin-inline-end: auto;
+}
+
+/* Ensure Numbers and Dates Stay LTR */
+[dir="rtl"] .ltr-content {
+    direction: ltr;
+    display: inline-block;
+}
+
+/* Phone Numbers */
+[dir="rtl"] .phone-number {
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+/* Email Addresses */
+[dir="rtl"] .email-address {
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+/* URLs */
+[dir="rtl"] .url {
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+/* Code Blocks */
+[dir="rtl"] code,
+[dir="rtl"] pre {
+    direction: ltr;
+    text-align: left;
+}
+
+/* Ensure Proper Font Rendering for Arabic */
+[dir="rtl"] {
+    font-family: 'Tajawal', 'Cairo', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
+}
+
+/* Improve Arabic Text Readability */
+[dir="rtl"] body {
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+    font-weight: 700;
+    line-height: 1.4;
+}
