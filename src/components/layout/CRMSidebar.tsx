@@ -20,6 +20,7 @@ import {
   Cloud,
   MessageCircle,
   Plug,
+  LucideIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -92,7 +93,7 @@ export function CRMSidebar({ collapsed, onToggle }: CRMSidebarProps) {
     ? `${profile.first_name[0]}${profile.last_name[0]}`
     : userName.slice(0, 2).toUpperCase();
 
-  const NavItem = ({ icon: Icon, label, path }: { icon: any; label: string; path: string }) => {
+  const NavItem = ({ icon: Icon, label, path }: { icon: LucideIcon; label: string; path: string }) => {
     const isActive = location.pathname === path;
 
     const content = (

@@ -369,7 +369,7 @@ export function useDashboardData(): DashboardData {
 
       if (isJwtError && retryCountRef.current < 2) {
         retryCountRef.current += 1;
-        console.log('JWT error detected, refreshing session...');
+
         // #region agent log
         fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'useDashboardData.ts:352', message: 'JWT error in fetchData, attempting refresh', data: { retryCount: retryCountRef.current, refreshSessionExists: !!refreshSession }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'B' }) }).catch(() => { });
         // #endregion

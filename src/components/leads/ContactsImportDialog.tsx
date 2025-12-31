@@ -11,9 +11,9 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  Contact, 
-  Check, 
+import {
+  Contact,
+  Check,
   Loader2,
   Phone,
   Smartphone,
@@ -38,6 +38,12 @@ interface DeviceContact {
   name: string[];
   tel?: string[];
   email?: string[];
+}
+
+interface NavigatorWithContacts extends Navigator {
+  contacts: {
+    select(properties: string[], options?: { multiple?: boolean }): Promise<DeviceContact[]>;
+  };
 }
 
 const isContactPickerSupported = () => "contacts" in navigator && "ContactsManager" in window;
@@ -70,9 +76,9 @@ export function ContactsImportDialog({ open, onOpenChange, onImport }: ContactsI
 
     setIsLoading(true);
     try {
-      // @ts-ignore
-      const pickedContacts: DeviceContact[] = await navigator.contacts.select(["name", "tel", "email"], { multiple: true });
-      
+      const navigatorWithContacts = navigator as unknown as NavigatorWithContacts;
+      const pickedContacts: DeviceContact[] = await navigatorWithContacts.contacts.select(["name", "tel", "email"], { multiple: true });
+
       if (pickedContacts?.length > 0) {
         const mappedContacts: ContactLead[] = pickedContacts
           .filter(contact => contact.name?.[0] || contact.tel?.[0])
@@ -87,8 +93,8 @@ export function ContactsImportDialog({ open, onOpenChange, onImport }: ContactsI
         setHasPickedContacts(true);
         toast.success(`Found ${mappedContacts.length} contacts`);
       }
-    } catch (error: any) {
-      if (error.name !== "InvalidStateError") {
+    } catch (error: unknown) {
+      if ((error as Error).name !== "InvalidStateError") {
         toast.error("Failed to access contacts");
       }
     } finally {
@@ -137,7 +143,7 @@ export function ContactsImportDialog({ open, onOpenChange, onImport }: ContactsI
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
                 <Smartphone className="h-6 w-6 text-primary" />
               </div>
-              
+
               {supported ? (
                 <>
                   <p className="text-sm text-muted-foreground mb-4">
@@ -186,8 +192,8 @@ export function ContactsImportDialog({ open, onOpenChange, onImport }: ContactsI
               <ScrollArea className="h-[220px]">
                 <div className="space-y-1.5 pr-2">
                   {contacts.map((contact, index) => (
-                    <Card 
-                      key={index} 
+                    <Card
+                      key={index}
                       className={cn(
                         "p-2 cursor-pointer transition-colors",
                         selectedContacts.has(index) && "bg-primary/5 border-primary/30"

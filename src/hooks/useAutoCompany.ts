@@ -39,7 +39,7 @@ export function useAutoCompany() {
       isCreating.current = true;
 
       try {
-        console.log('[useAutoCompany] Checking company for user:', user.id);
+
 
         // Double-check profile in case context is stale
         const { data: freshProfile, error: profileError } = await supabase
@@ -59,7 +59,7 @@ export function useAutoCompany() {
         }
 
         if (freshProfile?.company_id) {
-          console.log('[useAutoCompany] Found existing company:', freshProfile.company_id);
+
           if (isMounted) {
             setCompanyId(freshProfile.company_id);
             setIsLoading(false);
@@ -69,7 +69,7 @@ export function useAutoCompany() {
         }
 
         // Create a new company for the user
-        console.log('[useAutoCompany] Creating company for user...');
+
         const userName = freshProfile?.first_name || user.email?.split('@')[0] || 'User';
         let companyName = `${userName}'s Company`;
 
@@ -136,7 +136,7 @@ export function useAutoCompany() {
           await refreshProfile?.();
         }
 
-        console.log('[useAutoCompany] Created company:', newCompany.id);
+
         if (isMounted) {
           setCompanyId(newCompany.id);
           setIsLoading(false);

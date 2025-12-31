@@ -144,7 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, newSession) => {
         if (!mounted) return;
 
-        console.log('Auth event:', event);
+
 
         if (event === 'TOKEN_REFRESHED' && newSession) {
           setSession(newSession);
@@ -269,7 +269,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase.auth.signOut({ scope: 'local' });
     } catch (error) {
       // Session may already be expired, that's okay
-      console.log('Sign out completed (session may have been expired)');
+
     }
   };
 

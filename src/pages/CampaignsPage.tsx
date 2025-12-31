@@ -155,7 +155,7 @@ export default function CampaignsPage() {
         throw new Error(campaignError.message);
       }
 
-      console.log('Campaign created:', campaign);
+
 
       // 2. Add recipients based on audience method
       let allRecipients: any[] = [];
@@ -227,7 +227,7 @@ export default function CampaignsPage() {
         }
 
         toast.dismiss('recipient-progress');
-        console.log(`Added ${allRecipients.length} recipients in ${totalBatches} batches`);
+
       }
 
       // 3. Create analytics entry

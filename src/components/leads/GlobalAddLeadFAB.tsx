@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { 
-  Plus, 
-  FileSpreadsheet, 
-  Contact, 
+import {
+  Plus,
+  FileSpreadsheet,
+  Contact,
   UserPlus,
   X
 } from "lucide-react";
@@ -37,12 +37,12 @@ export function GlobalAddLeadFAB({ className }: GlobalAddLeadFABProps) {
   };
 
   const handleExcelImport = (leads: Record<string, string>[]) => {
-    console.log("Imported leads:", leads);
+
     // In a real app, this would add leads to the database
   };
 
   const handleContactsImport = (leads: { name: string; phone: string; email?: string }[]) => {
-    console.log("Imported contacts:", leads);
+
     // In a real app, this would add leads to the database
   };
 
@@ -50,12 +50,12 @@ export function GlobalAddLeadFAB({ className }: GlobalAddLeadFABProps) {
     <>
       {/* FAB Menu Overlay */}
       {isFabOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/30 z-40 animate-fade-in"
           onClick={() => setIsFabOpen(false)}
         />
       )}
-      
+
       {/* FAB Options */}
       <div className={cn(
         "fixed bottom-36 right-4 z-50 flex flex-col gap-2 transition-all duration-200",
@@ -99,15 +99,15 @@ export function GlobalAddLeadFAB({ className }: GlobalAddLeadFABProps) {
 
       {/* Dialogs */}
       <AddLeadDialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen} />
-      
-      <ExcelImportDialog 
-        open={isExcelImportOpen} 
+
+      <ExcelImportDialog
+        open={isExcelImportOpen}
         onOpenChange={setIsExcelImportOpen}
         onImport={handleExcelImport}
       />
-      
-      <ContactsImportDialog 
-        open={isContactsImportOpen} 
+
+      <ContactsImportDialog
+        open={isContactsImportOpen}
         onOpenChange={setIsContactsImportOpen}
         onImport={handleContactsImport}
       />

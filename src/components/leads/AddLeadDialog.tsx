@@ -64,7 +64,7 @@ export function AddLeadDialog({ children, open: controlledOpen, onOpenChange, on
   const [internalOpen, setInternalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
-  
+
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
   const setOpen = (value: boolean) => {
@@ -118,13 +118,12 @@ export function AddLeadDialog({ children, open: controlledOpen, onOpenChange, on
       toast.success("Lead created successfully!", {
         description: `${data.name} has been added.`,
       });
-      form.reset();
       setOpen(false);
       onLeadAdded?.();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating lead:', error);
       toast.error("Failed to create lead", {
-        description: error.message || "Please try again",
+        description: (error as Error).message || "Please try again",
       });
     } finally {
       setIsSubmitting(false);

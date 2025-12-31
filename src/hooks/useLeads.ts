@@ -65,7 +65,7 @@ export function useLeads() {
 
   const fetchLeads = useCallback(async () => {
     // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useLeads.ts:66',message:'fetchLeads entry',data:{retryCount:retryCountRef.current,refreshSessionExists:!!refreshSession},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'useLeads.ts:66', message: 'fetchLeads entry', data: { retryCount: retryCountRef.current, refreshSessionExists: !!refreshSession }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
     // #endregion
     setIsLoading(true);
     setError(null);
@@ -100,25 +100,25 @@ export function useLeads() {
 
     if (fetchError) {
       // Check if it's a JWT error
-      const isJwtError = fetchError.message?.includes('JWT') || 
-                         fetchError.code === 'PGRST301' || 
-                         fetchError.code === 'PGRST303';
-      
+      const isJwtError = fetchError.message?.includes('JWT') ||
+        fetchError.code === 'PGRST301' ||
+        fetchError.code === 'PGRST303';
+
       if (isJwtError && retryCountRef.current < 2) {
         retryCountRef.current += 1;
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useLeads.ts:104',message:'JWT error detected, attempting refresh',data:{retryCount:retryCountRef.current,refreshSessionExists:!!refreshSession},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'useLeads.ts:104', message: 'JWT error detected, attempting refresh', data: { retryCount: retryCountRef.current, refreshSessionExists: !!refreshSession }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
         // #endregion
         const refreshed = await refreshSession();
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useLeads.ts:107',message:'Session refresh result',data:{refreshed,retryCount:retryCountRef.current},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'useLeads.ts:107', message: 'Session refresh result', data: { refreshed, retryCount: retryCountRef.current }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
         // #endregion
         if (refreshed) {
           setTimeout(() => fetchLeads(), 500);
           return;
         }
       }
-      
+
       setError(fetchError.message);
       setLeads([]);
     } else {
@@ -130,14 +130,14 @@ export function useLeads() {
 
   useEffect(() => {
     // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useLeads.ts:122',message:'useEffect entry - fetchLeads called',data:{refreshSessionExists:!!refreshSession,retryCount:retryCountRef.current},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'useLeads.ts:122', message: 'useEffect entry - fetchLeads called', data: { refreshSessionExists: !!refreshSession, retryCount: retryCountRef.current }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
     // #endregion
     fetchLeads();
 
     // Subscribe to real-time changes with unique channel name
     const channelName = `leads-realtime-${Date.now()}`;
     // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useLeads.ts:127',message:'Creating realtime channel',data:{channelName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7242/ingest/64664f1c-2aa5-4d5b-a8e0-b4c2f83d09ac', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'useLeads.ts:127', message: 'Creating realtime channel', data: { channelName }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
     // #endregion
     const channel = supabase
       .channel(channelName)
@@ -149,8 +149,8 @@ export function useLeads() {
           table: 'leads',
         },
         async (payload) => {
-          console.log('New lead received via realtime:', payload);
-          
+
+
           try {
             // Fetch the full lead with agent relation
             const { data, error } = await supabase
@@ -179,7 +179,7 @@ export function useLeads() {
               `)
               .eq('id', payload.new.id)
               .single();
-            
+
             if (error) {
               console.error('Error fetching new lead details:', error);
               // Still try to add with basic payload data
@@ -196,19 +196,19 @@ export function useLeads() {
               });
               return;
             }
-            
+
             if (data) {
-              console.log('Full lead data fetched:', data);
+
               setLeads((prev) => {
                 // Check if lead already exists to avoid duplicates
                 if (prev.some(lead => lead.id === data.id)) {
-                  console.log('Lead already exists, skipping duplicate');
+
                   return prev;
                 }
-                console.log('Adding new lead to state');
+
                 return [data as Lead, ...prev];
               });
-              
+
               // Show notification for new lead
               toast.success(`New lead: ${data.name || 'Unknown'}`, {
                 description: `Source: ${data.source || 'Direct'} • ${data.phone || data.email || 'No contact'}`,
@@ -228,7 +228,7 @@ export function useLeads() {
           table: 'leads',
         },
         async (payload) => {
-          console.log('Lead updated:', payload);
+
           const { data } = await supabase
             .from("leads")
             .select(`
@@ -255,9 +255,9 @@ export function useLeads() {
             `)
             .eq('id', payload.new.id)
             .single();
-          
+
           if (data) {
-            setLeads((prev) => 
+            setLeads((prev) =>
               prev.map((lead) => lead.id === data.id ? data as Lead : lead)
             );
           }
@@ -271,12 +271,12 @@ export function useLeads() {
           table: 'leads',
         },
         (payload) => {
-          console.log('Lead deleted:', payload);
+
           setLeads((prev) => prev.filter((lead) => lead.id !== payload.old.id));
         }
       )
       .subscribe((status) => {
-        console.log('Leads realtime subscription status:', status);
+
       });
 
     return () => {
@@ -294,7 +294,7 @@ export function useLeads() {
       const { data, error } = await supabase.functions.invoke('fetch-property-finder-leads', {
         body: { company_id: companyId },
       });
-      
+
       if (error) throw error;
       return data;
     } catch (err) {

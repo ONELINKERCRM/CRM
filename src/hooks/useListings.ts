@@ -129,7 +129,7 @@ export function useListings() {
           table: "listings",
         },
         (payload) => {
-          console.log("New listing received:", payload);
+
           const newListing = {
             ...payload.new,
             type: payload.new.property_type || "Apartment",
@@ -154,7 +154,7 @@ export function useListings() {
           table: "listings",
         },
         (payload) => {
-          console.log("Listing updated:", payload);
+
           setListings((prev) =>
             prev.map((listing) =>
               listing.id === payload.new.id
@@ -184,7 +184,7 @@ export function useListings() {
           table: "listings",
         },
         (payload) => {
-          console.log("Listing deleted:", payload);
+
           setListings((prev) => prev.filter((listing) => listing.id !== payload.old.id));
         }
       )

@@ -13,11 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useAssignmentNotifications } from "@/hooks/useLeadAssignment";
-import { formatDistanceToNow } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+import { useAssignmentNotifications, AssignmentNotification } from "@/hooks/useLeadAssignment";
 
 export const NotificationsTab = () => {
   const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead, fetchNotifications } = useAssignmentNotifications();
@@ -30,7 +26,7 @@ export const NotificationsTab = () => {
     setRefreshing(false);
   };
 
-  const handleNotificationClick = async (notification: any) => {
+  const handleNotificationClick = async (notification: AssignmentNotification) => {
     if (!notification.is_read) {
       await markAsRead(notification.id);
     }
@@ -87,7 +83,7 @@ export const NotificationsTab = () => {
               <div>
                 <h3 className="font-medium text-foreground">Assignment Notifications</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Stay updated on lead assignments, reassignments, and urgent alerts. 
+                  Stay updated on lead assignments, reassignments, and urgent alerts.
                   Agents receive notifications immediately when leads are assigned to them.
                 </p>
               </div>
@@ -99,9 +95,9 @@ export const NotificationsTab = () => {
                   Mark All Read
                 </Button>
               )}
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleRefresh}
                 disabled={refreshing}
               >

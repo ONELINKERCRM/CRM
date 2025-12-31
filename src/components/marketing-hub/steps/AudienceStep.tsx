@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { 
+import {
   Users, Filter, Search, UserCheck, Upload, FileSpreadsheet,
   ChevronDown, ChevronUp, CheckCircle2, AlertCircle, X, Loader2
 } from 'lucide-react';
@@ -43,7 +43,7 @@ interface AudienceStepProps {
   isRTL?: boolean;
 }
 
-export function AudienceStep({ 
+export function AudienceStep({
   selectedLeads = [],
   filters = {},
   audienceMethod = 'manual',
@@ -52,7 +52,7 @@ export function AudienceStep({
   onFiltersChange,
   onAudienceMethodChange,
   onImportedLeadsChange,
-  isRTL = false 
+  isRTL = false
 }: AudienceStepProps) {
   const { leads: crmLeads, isLoading: leadsLoading } = useLeads();
   const [search, setSearch] = useState('');
@@ -60,7 +60,7 @@ export function AudienceStep({
   const [stageFilter, setStageFilter] = useState<string>('all');
   const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [activeTab, setActiveTab] = useState<AudienceSelectionMethod>(audienceMethod);
-  
+
   // Excel import state
   const [excelData, setExcelData] = useState<Record<string, string>[]>([]);
   const [excelColumns, setExcelColumns] = useState<string[]>([]);
@@ -71,10 +71,10 @@ export function AudienceStep({
   // Filter leads with phone numbers (required for WhatsApp campaigns)
   const leadsWithPhone = crmLeads.filter(l => l.phone);
   const optedInLeads = leadsWithPhone; // All leads with phone are considered opted-in for now
-  
+
   const filteredLeads = leadsWithPhone.filter(lead => {
     const matchesSearch = lead.name.toLowerCase().includes(search.toLowerCase()) ||
-                         (lead.phone?.includes(search) ?? false);
+      (lead.phone?.includes(search) ?? false);
     const matchesStage = stageFilter === 'all' || lead.lead_stage?.name === stageFilter || lead.stage === stageFilter;
     const matchesSource = sourceFilter === 'all' || lead.source === sourceFilter;
     return matchesSearch && matchesStage && matchesSource;
@@ -83,7 +83,7 @@ export function AudienceStep({
   const handleTabChange = (tab: string) => {
     setActiveTab(tab as AudienceSelectionMethod);
     onAudienceMethodChange?.(tab as AudienceSelectionMethod);
-    
+
     if (tab === 'select_all') {
       onSelectLeads(optedInLeads.map(l => l.id));
     } else if (tab === 'manual') {
@@ -119,11 +119,11 @@ export function AudienceStep({
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         // Parse with raw: false to get formatted strings, and defval to handle empty cells
-        const jsonData = XLSX.utils.sheet_to_json<Record<string, unknown>>(worksheet, { 
+        const jsonData = XLSX.utils.sheet_to_json<Record<string, unknown>>(worksheet, {
           raw: false,
-          defval: '' 
+          defval: ''
         });
-        
+
         if (jsonData.length === 0) {
           toast.error(isRTL ? 'الملف فارغ' : 'File is empty');
           return;
@@ -142,10 +142,10 @@ export function AudienceStep({
         setExcelData(stringData);
         setExcelColumns(columns);
         setMappingComplete(false);
-        
+
         // Auto-detect phone column
-        const phoneCol = columns.find(c => 
-          c.toLowerCase().includes('phone') || 
+        const phoneCol = columns.find(c =>
+          c.toLowerCase().includes('phone') ||
           c.toLowerCase().includes('mobile') ||
           c.toLowerCase().includes('whatsapp') ||
           c.toLowerCase().includes('tel') ||
@@ -155,9 +155,9 @@ export function AudienceStep({
         if (phoneCol) {
           setColumnMapping(prev => ({ ...prev, phone: phoneCol }));
         }
-        
+
         // Auto-detect name column
-        const nameCol = columns.find(c => 
+        const nameCol = columns.find(c =>
           c.toLowerCase().includes('name') ||
           c.toLowerCase().includes('full') ||
           c.toLowerCase().includes('الاسم') ||
@@ -168,7 +168,7 @@ export function AudienceStep({
         }
 
         // Auto-detect email column
-        const emailCol = columns.find(c => 
+        const emailCol = columns.find(c =>
           c.toLowerCase().includes('email') ||
           c.toLowerCase().includes('mail') ||
           c.toLowerCase().includes('بريد')
@@ -177,10 +177,10 @@ export function AudienceStep({
           setColumnMapping(prev => ({ ...prev, email: emailCol }));
         }
 
-        console.log('Excel parsed:', { columns, rowCount: stringData.length, sample: stringData[0] });
 
-        toast.success(isRTL 
-          ? `تم تحميل ${stringData.length} سجل` 
+
+        toast.success(isRTL
+          ? `تم تحميل ${stringData.length} سجل`
           : `Loaded ${stringData.length} records`
         );
       } catch (error) {
@@ -212,8 +212,8 @@ export function AudienceStep({
 
     setMappingComplete(true);
     onImportedLeadsChange?.(leads);
-    toast.success(isRTL 
-      ? `تم استيراد ${leads.length} عميل` 
+    toast.success(isRTL
+      ? `تم استيراد ${leads.length} عميل`
       : `Imported ${leads.length} leads`
     );
   };
@@ -255,7 +255,7 @@ export function AudienceStep({
           {isRTL ? 'اختر الجمهور' : 'Select Audience'}
         </h2>
         <p className="text-muted-foreground">
-          {isRTL 
+          {isRTL
             ? 'اختر العملاء الذين ستصلهم الحملة'
             : 'Choose the leads who will receive the campaign'}
         </p>
@@ -374,7 +374,7 @@ export function AudienceStep({
           {/* Select All Button */}
           <div className="flex justify-end">
             <Button variant="outline" size="sm" onClick={handleSelectAll}>
-              {selectedLeads.length === filteredLeads.length 
+              {selectedLeads.length === filteredLeads.length
                 ? (isRTL ? 'إلغاء الكل' : 'Deselect All')
                 : (isRTL ? 'تحديد الكل' : 'Select All')}
             </Button>
@@ -392,7 +392,7 @@ export function AudienceStep({
                   <div className="divide-y divide-border">
                     {filteredLeads.map(lead => {
                       const isSelected = selectedLeads.includes(lead.id);
-                      
+
                       return (
                         <div
                           key={lead.id}
@@ -452,7 +452,7 @@ export function AudienceStep({
                     {isRTL ? 'كل العملاء المشتركين' : 'All Opted-In Leads'}
                   </h3>
                   <p className="text-muted-foreground">
-                    {isRTL 
+                    {isRTL
                       ? `سيتم إرسال الحملة إلى ${optedInLeads.length} عميل وافقوا على استلام الرسائل`
                       : `Campaign will be sent to ${optedInLeads.length} leads who have consented to receive messages`}
                   </p>
@@ -508,7 +508,7 @@ export function AudienceStep({
                       {isRTL ? 'استيراد من Excel/CSV' : 'Import from Excel/CSV'}
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {isRTL 
+                      {isRTL
                         ? 'قم بتحميل ملف Excel أو CSV يحتوي على أرقام الهاتف'
                         : 'Upload an Excel or CSV file containing phone numbers'}
                     </p>
@@ -567,8 +567,8 @@ export function AudienceStep({
                         <label className="text-sm font-medium text-destructive">
                           {isRTL ? 'رقم الهاتف *' : 'Phone Number *'}
                         </label>
-                        <Select 
-                          value={columnMapping.phone} 
+                        <Select
+                          value={columnMapping.phone}
                           onValueChange={(v) => setColumnMapping(prev => ({ ...prev, phone: v }))}
                         >
                           <SelectTrigger>
@@ -585,8 +585,8 @@ export function AudienceStep({
                         <label className="text-sm font-medium">
                           {isRTL ? 'الاسم (اختياري)' : 'Name (optional)'}
                         </label>
-                        <Select 
-                          value={columnMapping.name || '_none'} 
+                        <Select
+                          value={columnMapping.name || '_none'}
                           onValueChange={(v) => setColumnMapping(prev => ({ ...prev, name: v === '_none' ? undefined : v }))}
                         >
                           <SelectTrigger>
@@ -604,8 +604,8 @@ export function AudienceStep({
                         <label className="text-sm font-medium">
                           {isRTL ? 'البريد (اختياري)' : 'Email (optional)'}
                         </label>
-                        <Select 
-                          value={columnMapping.email || '_none'} 
+                        <Select
+                          value={columnMapping.email || '_none'}
                           onValueChange={(v) => setColumnMapping(prev => ({ ...prev, email: v === '_none' ? undefined : v }))}
                         >
                           <SelectTrigger>
@@ -656,7 +656,7 @@ export function AudienceStep({
                         ))}
                         {importedLeads.length > 50 && (
                           <div className="p-3 text-center text-sm text-muted-foreground">
-                            {isRTL 
+                            {isRTL
                               ? `... و ${importedLeads.length - 50} آخرين`
                               : `... and ${importedLeads.length - 50} more`}
                           </div>

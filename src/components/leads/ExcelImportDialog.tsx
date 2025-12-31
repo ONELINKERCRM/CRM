@@ -191,7 +191,7 @@ export function ExcelImportDialog({ open, onOpenChange, onImport }: ExcelImportD
 
   const getMappedData = (): Array<{ name: string; phone?: string; email?: string; source?: string; stage?: string; opted_in?: boolean; activity_date?: string; activity_description?: string }> => {
     return excelData.map(row => {
-      const lead: Record<string, any> = {};
+      const lead: Record<string, unknown> = {};
       Object.entries(columnMapping).forEach(([fieldKey, colIndex]) => {
         const value = row[parseInt(colIndex)] || "";
         if (fieldKey === "opted_in") {
@@ -208,7 +208,7 @@ export function ExcelImportDialog({ open, onOpenChange, onImport }: ExcelImportD
         }
       });
       return lead;
-    }).filter(lead => lead.name && (lead.phone || lead.email)) as any[];
+    }).filter(lead => lead.name && (lead.phone || lead.email));
   };
 
   const handlePreview = async () => {
@@ -245,7 +245,7 @@ export function ExcelImportDialog({ open, onOpenChange, onImport }: ExcelImportD
         jobId: result.jobId,
       });
       setStep("complete");
-      onImport?.(leads as any);
+      onImport?.(leads as Record<string, string>[]);
     } else {
       setStep("preview");
     }

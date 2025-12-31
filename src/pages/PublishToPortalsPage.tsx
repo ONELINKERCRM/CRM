@@ -327,7 +327,7 @@ export default function PublishToPortalsPage() {
           .eq("status", "connected");
 
         if (!portalAccounts || portalAccounts.length === 0) {
-          console.log("No connected portal accounts found");
+
           return;
         }
 
@@ -338,7 +338,7 @@ export default function PublishToPortalsPage() {
           const portal = account.portals as { id: string; name: string } | null;
           if (!portal) continue;
 
-          console.log("Fetching agents for portal:", portal.name);
+
 
           const { data, error } = await supabase.functions.invoke("portal-agents-fetch", {
             body: {
@@ -355,7 +355,7 @@ export default function PublishToPortalsPage() {
           }
 
           if (data?.agents) {
-            console.log("Received agents from portal:", data.agents.length);
+
             allPortalAgents.push(...data.agents);
           }
         }

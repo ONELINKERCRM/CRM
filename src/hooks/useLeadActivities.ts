@@ -76,7 +76,7 @@ const formatTimeAgo = (dateString: string): string => {
     const formattedMinutes = minutes.toString().padStart(2, "0");
     return `Yesterday, ${formattedHours}:${formattedMinutes} ${ampm}`;
   }
-  
+
   const month = date.toLocaleDateString("en-US", { month: "short" });
   const day = date.getDate();
   const year = date.getFullYear();
@@ -89,10 +89,10 @@ const formatTimeAgo = (dateString: string): string => {
 };
 
 const mapActivityToTimeline = (activity: LeadActivity): TimelineItem => {
-  const attachmentsList = Array.isArray(activity.attachments) 
-    ? activity.attachments 
+  const attachmentsList = Array.isArray(activity.attachments)
+    ? activity.attachments
     : [];
-  
+
   return {
     id: activity.id,
     type: activity.type,
@@ -125,24 +125,24 @@ const formatDateTime = (dateString: string): string => {
 // Generate system activities based on lead data
 const generateSystemActivities = (lead: LeadInfo | null): TimelineItem[] => {
   if (!lead) return [];
-  
+
   const systemActivities: TimelineItem[] = [];
   const createdDateTime = formatDateTime(lead.created_at);
-  
+
   // Lead Created activity
   systemActivities.push({
     id: `system-created-${lead.id}`,
     type: "added",
     title: "Lead added to CRM",
-    description: lead.source 
-      ? `${createdDateTime} • Source: ${lead.source}` 
+    description: lead.source
+      ? `${createdDateTime} • Source: ${lead.source}`
       : `${createdDateTime} • Manually added`,
     agent: "System",
     time: formatTimeAgo(lead.created_at),
     rawTime: new Date(lead.created_at),
     isSystem: true,
   });
-  
+
   // Lead Assigned activity (if assigned)
   if (lead.assigned_agent_id && lead.agent?.name) {
     // Add a slight offset so assignment appears after creation
@@ -159,17 +159,17 @@ const generateSystemActivities = (lead: LeadInfo | null): TimelineItem[] => {
       isSystem: true,
     });
   }
-  
+
   return systemActivities;
 };
 
 export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
   const [dbActivities, setDbActivities] = useState<TimelineItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Generate system activities from lead info
   const systemActivities = useMemo(() => generateSystemActivities(leadInfo || null), [leadInfo]);
-  
+
   // Combine and sort all activities
   const activities = useMemo(() => {
     const combined = [...dbActivities, ...systemActivities];
@@ -212,8 +212,8 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
 
   // Subscribe to realtime updates
   useEffect(() => {
-    console.log("Setting up realtime subscription for lead:", leadId);
-    
+
+
     const channel = supabase
       .channel(`lead-activities-${leadId}`)
       .on(
@@ -225,10 +225,10 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
           filter: `lead_id=eq.${leadId}`,
         },
         (payload) => {
-          console.log("New activity received:", payload);
+
           const newActivity = payload.new as LeadActivity;
           const timelineItem = mapActivityToTimeline(newActivity);
-          
+
           setDbActivities((prev) => [timelineItem, ...prev]);
           toast.success(`New ${newActivity.type} added to timeline`);
         }
@@ -242,17 +242,17 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
           filter: `lead_id=eq.${leadId}`,
         },
         (payload) => {
-          console.log("Activity deleted:", payload);
+
           const deletedId = (payload.old as LeadActivity).id;
           setDbActivities((prev) => prev.filter((a) => a.id !== deletedId));
         }
       )
       .subscribe((status) => {
-        console.log("Realtime subscription status:", status);
+
       });
 
     return () => {
-      console.log("Cleaning up realtime subscription");
+
       supabase.removeChannel(channel);
     };
   }, [leadId]);
@@ -260,25 +260,25 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
   // Upload files and return attachment info
   const uploadFiles = async (files: File[], activityId: string): Promise<AttachmentInfo[]> => {
     const attachments: AttachmentInfo[] = [];
-    
+
     for (const file of files) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${leadId}/${activityId}/${Date.now()}-${file.name}`;
-      
+
       const { data, error } = await supabase.storage
         .from('activity-attachments')
         .upload(fileName, file);
-      
+
       if (error) {
         console.error("Error uploading file:", error);
         toast.error(`Failed to upload ${file.name}`);
         continue;
       }
-      
+
       const { data: urlData } = supabase.storage
         .from('activity-attachments')
         .getPublicUrl(data.path);
-      
+
       attachments.push({
         name: file.name,
         url: urlData.publicUrl,
@@ -286,7 +286,7 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
         type: file.type,
       });
     }
-    
+
     return attachments;
   };
 
@@ -325,7 +325,7 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
       // If there are files, upload them and update the activity
       if (files && files.length > 0) {
         const attachments = await uploadFiles(files, insertedActivity.id);
-        
+
         if (attachments.length > 0) {
           const { error: updateError } = await supabase
             .from("lead_activities")
@@ -334,7 +334,7 @@ export function useLeadActivities(leadId: string, leadInfo?: LeadInfo | null) {
               attachments_count: attachments.length,
             })
             .eq("id", insertedActivity.id);
-          
+
           if (updateError) {
             console.error("Error updating attachments:", updateError);
           }

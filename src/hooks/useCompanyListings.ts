@@ -182,7 +182,7 @@ export function useCompanyListings() {
           table: "listings",
         },
         (payload) => {
-          console.log("Company listing change:", payload);
+
           // Refetch to get updated data with joins
           if (fetchListingsRef.current) {
             fetchListingsRef.current();

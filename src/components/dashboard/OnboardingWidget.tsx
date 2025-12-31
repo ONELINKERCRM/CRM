@@ -99,7 +99,7 @@ export function OnboardingWidget() {
         setIsVisible(false);
         if (user) {
             try {
-                const currentPrefs = (profile?.dashboard_preferences as Record<string, any>) || {};
+                const currentPrefs = (profile?.dashboard_preferences as Record<string, unknown>) || {};
                 await supabase.from('profiles').update({
                     dashboard_preferences: { ...currentPrefs, onboarding_dismissed: true }
                 }).eq('id', user.id);

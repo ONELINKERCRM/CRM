@@ -268,12 +268,12 @@ function LeadsPageContent() {
   };
 
   const handleExcelImport = (leads: Record<string, string>[]) => {
-    console.log("Imported leads:", leads);
+
     // In a real app, this would add leads to the database
   };
 
   const handleContactsImport = (leads: { name: string; phone: string; email?: string }[]) => {
-    console.log("Imported contacts:", leads);
+
     // In a real app, this would add leads to the database
   };
 

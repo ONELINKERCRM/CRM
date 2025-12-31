@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight, LucideIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -39,7 +39,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
     ? `${profile.first_name[0]}${profile.last_name[0]}`
     : userName.slice(0, 2).toUpperCase();
 
-  const NavItem = ({ icon: Icon, label, path }: { icon: any; label: string; path: string }) => {
+  const NavItem = ({ icon: Icon, label, path }: { icon: LucideIcon; label: string; path: string }) => {
     const isActive = location.pathname === path ||
       (path !== "/" && location.pathname.startsWith(path));
 

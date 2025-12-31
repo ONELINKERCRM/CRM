@@ -80,14 +80,14 @@ export function useLeadSources() {
   // Fetch sources with error handling
   const fetchSources = useCallback(async () => {
     if (!companyId) {
-      console.log('[useLeadSources] No companyId, skipping fetchSources');
+
       return;
     }
-    
-    console.log('[useLeadSources] Fetching sources for company:', companyId);
+
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const { data, error: fetchError } = await supabase
         .from('lead_sources')
@@ -99,8 +99,8 @@ export function useLeadSources() {
         console.error('[useLeadSources] Error fetching lead_sources:', fetchError);
         throw fetchError;
       }
-      
-      console.log('[useLeadSources] Fetched sources:', data?.length || 0);
+
+
       setSources((data || []) as LeadSource[]);
     } catch (err: any) {
       console.error('[useLeadSources] fetchSources error:', err);
@@ -114,7 +114,7 @@ export function useLeadSources() {
   // Fetch logs
   const fetchLogs = useCallback(async (sourceId?: string) => {
     if (!companyId) return;
-    
+
     try {
       let query = supabase
         .from('lead_source_logs')
@@ -138,7 +138,7 @@ export function useLeadSources() {
   // Fetch webhooks
   const fetchWebhooks = useCallback(async () => {
     if (!companyId) return;
-    
+
     try {
       const { data, error } = await supabase
         .from('lead_webhooks')
@@ -211,7 +211,7 @@ export function useLeadSources() {
 
       // Test connection
       const testResult = await testConnection(sourceId);
-      
+
       if (testResult.success) {
         toast.success('Source connected successfully');
       } else {
@@ -269,7 +269,7 @@ export function useLeadSources() {
     try {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       const response = await fetch(
         `${supabaseUrl}/functions/v1/meta-oauth?action=get_forms`,
         {
@@ -281,10 +281,10 @@ export function useLeadSources() {
           body: JSON.stringify({ source_id: sourceId, company_id: companyId })
         }
       );
-      
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to fetch forms');
-      
+
       return data.forms || [];
     } catch (error: any) {
       console.error('Error fetching Meta forms:', error);
@@ -299,7 +299,7 @@ export function useLeadSources() {
     try {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       const response = await fetch(
         `${supabaseUrl}/functions/v1/tiktok-integration?action=get_forms`,
         {
@@ -311,10 +311,10 @@ export function useLeadSources() {
           body: JSON.stringify({ company_id: companyId })
         }
       );
-      
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to fetch forms');
-      
+
       return data.forms || [];
     } catch (error: any) {
       console.error('Error fetching TikTok forms:', error);
@@ -324,23 +324,23 @@ export function useLeadSources() {
 
   // Fetch leads manually with optional filters
   const fetchLeads = useCallback(async (
-    sourceId: string, 
+    sourceId: string,
     options?: { form_ids?: string[]; date_from?: string; date_to?: string }
   ) => {
     if (!companyId) return { success: false, error: 'No company' };
 
     try {
       toast.loading('Fetching leads...', { id: 'fetch-leads' });
-      
+
       // Find the source to check its type
       const source = sources.find(s => s.id === sourceId);
       let data;
-      
+
       if (source?.source_name === 'meta') {
         // Use Meta OAuth edge function for fetching - action must be in query params
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         const response = await fetch(
           `${supabaseUrl}/functions/v1/meta-oauth?action=fetch_leads`,
           {
@@ -349,8 +349,8 @@ export function useLeadSources() {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${session?.access_token || ''}`
             },
-            body: JSON.stringify({ 
-              source_id: sourceId, 
+            body: JSON.stringify({
+              source_id: sourceId,
               company_id: companyId,
               form_ids: options?.form_ids,
               date_from: options?.date_from,
@@ -358,14 +358,14 @@ export function useLeadSources() {
             })
           }
         );
-        
+
         data = await response.json();
         if (!response.ok) throw new Error(data.error || 'Failed to fetch');
       } else if (source?.source_name === 'tiktok') {
         // Use TikTok integration edge function
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         const response = await fetch(
           `${supabaseUrl}/functions/v1/tiktok-integration?action=fetch_leads`,
           {
@@ -374,14 +374,14 @@ export function useLeadSources() {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${session?.access_token || ''}`
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               form_ids: options?.form_ids,
               date_from: options?.date_from,
               date_to: options?.date_to
             })
           }
         );
-        
+
         data = await response.json();
         if (!response.ok) throw new Error(data.error || 'Failed to fetch');
       } else {
@@ -445,7 +445,7 @@ export function useLeadSources() {
         .single();
 
       if (error) throw error;
-      
+
       await fetchWebhooks();
       return data;
     } catch (error: any) {
@@ -475,7 +475,7 @@ export function useLeadSources() {
     try {
       const { error } = await supabase
         .from('lead_sources')
-        .update({ 
+        .update({
           status: 'connected',
           connection_details: { embed_installed: true, installed_at: new Date().toISOString() }
         })

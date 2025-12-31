@@ -96,7 +96,7 @@ export function useAssignmentConfig() {
 
         // If no config exists, create it first
         if (!config) {
-            console.log("No config found, creating default config first...");
+
             try {
                 const { data: newConfig, error: createError } = await supabase
                     .from("lead_assignment_config")
@@ -128,7 +128,7 @@ export function useAssignmentConfig() {
 
         // Update existing config
         try {
-            console.log("Updating config with:", updates);
+
             const { data, error } = await supabase
                 .from("lead_assignment_config")
                 .update(updates)
@@ -142,7 +142,7 @@ export function useAssignmentConfig() {
                 return false;
             }
 
-            console.log("Config updated successfully:", data);
+
             setConfig(data);
             toast.success("Assignment configuration updated");
             return true;
@@ -154,12 +154,12 @@ export function useAssignmentConfig() {
     };
 
     const updateAssignmentMethod = async (method: "manual" | "round_robin" | "rules") => {
-        console.log("Updating assignment method to:", method);
+
         return updateConfig({ assignment_method: method });
     };
 
     const updateEnabledAgents = async (agentIds: string[], leadsPerRound: Record<string, number>) => {
-        console.log("Updating enabled agents:", agentIds, leadsPerRound);
+
         return updateConfig({
             enabled_agent_ids: agentIds,
             agent_leads_per_round: leadsPerRound,

@@ -436,7 +436,7 @@ export function AddEditListingForm({
         if (error) throw error;
         if (newDraft) {
           setDraftId(newDraft.id);
-          console.log('Draft created with ID:', newDraft.id);
+
         }
       }
     } catch (error) {
@@ -454,18 +454,18 @@ export function AddEditListingForm({
       debounceMs: 3000, // Save after 3 seconds of inactivity
       intervalMs: 30000, // Also save every 30 seconds
       onSaveStart: () => {
-        console.log('[AutoSave] Starting save...');
+
         setAutoSaveStatus('saving');
       },
       onSaveSuccess: () => {
-        console.log('[AutoSave] Save successful!');
+
         setAutoSaveStatus('saved');
         toast.success('Draft saved', {
           description: 'Your listing has been auto-saved',
           duration: 2000,
         });
         setTimeout(() => {
-          console.log('[AutoSave] Resetting status to idle');
+
           setAutoSaveStatus('idle');
         }, 3000); // Show "Saved as draft" for 3 seconds
       },
@@ -511,7 +511,7 @@ export function AddEditListingForm({
 
   // Debug: Log autoSaveStatus changes
   useEffect(() => {
-    console.log('[AutoSave] Status changed to:', autoSaveStatus);
+
   }, [autoSaveStatus]);
 
   // DnD sensors
@@ -653,7 +653,7 @@ export function AddEditListingForm({
           const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
           const filePath = `listings/${fileName}`;
 
-          console.log(`Uploading ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) to ${filePath}`);
+
 
           const { error: uploadError, data: uploadData } = await supabase.storage
             .from('property-media')
@@ -672,7 +672,7 @@ export function AddEditListingForm({
             .from('property-media')
             .getPublicUrl(filePath);
 
-          console.log(`Successfully uploaded ${file.name}, URL: ${publicUrl}`);
+
           return publicUrl;
         } catch (err) {
           console.error('Unexpected error uploading', file.name, ':', err);
@@ -890,7 +890,7 @@ export function AddEditListingForm({
         const enabledPortals = formData.portals.filter(p => p.enabled && p.name !== "Website");
 
         if (enabledPortals.length > 0) {
-          console.log(`[AddEditForm] Triggering publication for ${enabledPortals.length} portals...`);
+
 
           // Get portal IDs for the enabled portals
           const { data: portalsList } = await supabase

@@ -23,6 +23,7 @@ import {
   File,
   X,
   Upload,
+  LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -86,7 +87,7 @@ interface ActivityTimelineProps {
   onFollowupDialogChange?: (open: boolean) => void;
 }
 
-const timelineIcons: Record<string, any> = {
+const timelineIcons: Record<string, LucideIcon> = {
   call: PhoneCall,
   email: MailIcon,
   whatsapp: MessageCircle,
@@ -120,10 +121,10 @@ const timelineColors: Record<string, string> = {
   message: "bg-pink-500",
 };
 
-export function ActivityTimeline({ 
-  timelineData, 
-  onOpenVoiceModal, 
-  onAddNote, 
+export function ActivityTimeline({
+  timelineData,
+  onOpenVoiceModal,
+  onAddNote,
   onAddAttachment,
   onAddMeeting,
   onAddFollowup,
@@ -141,7 +142,7 @@ export function ActivityTimeline({
   const [internalMeetingDialog, setInternalMeetingDialog] = useState(false);
   const [internalFollowupDialog, setInternalFollowupDialog] = useState(false);
   const [internalAttachmentDialog, setInternalAttachmentDialog] = useState(false);
-  
+
   // Use external state if provided, otherwise use internal state
   const showNoteDialog = externalNoteDialog ?? internalNoteDialog;
   const setShowNoteDialog = onNoteDialogChange ?? setInternalNoteDialog;
@@ -151,27 +152,27 @@ export function ActivityTimeline({
   const setShowFollowupDialog = onFollowupDialogChange ?? setInternalFollowupDialog;
   const showAttachmentDialog = externalAttachmentDialog ?? internalAttachmentDialog;
   const setShowAttachmentDialog = onAttachmentDialogChange ?? setInternalAttachmentDialog;
-  
+
   // Note form state
   const [noteText, setNoteText] = useState("");
   const [noteFiles, setNoteFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Attachment form state
   const [attachmentDescription, setAttachmentDescription] = useState("");
   const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
-  
+
   // File input refs
   const noteFileInputRef = useRef<HTMLInputElement>(null);
   const attachmentFileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Meeting form state
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState("");
   const [meetingTime, setMeetingTime] = useState("");
   const [meetingLocation, setMeetingLocation] = useState("");
   const [meetingNotes, setMeetingNotes] = useState("");
-  
+
   // Follow-up form state
   const [followupTitle, setFollowupTitle] = useState("");
   const [followupDate, setFollowupDate] = useState("");
@@ -214,7 +215,7 @@ export function ActivityTimeline({
 
   const handleSaveNote = async () => {
     if (!noteText.trim()) return;
-    
+
     setIsSubmitting(true);
     if (onAddNote) {
       const success = await onAddNote(noteText.trim(), noteFiles.length > 0 ? noteFiles : undefined);
@@ -238,7 +239,7 @@ export function ActivityTimeline({
       toast.error("Please select at least one file");
       return;
     }
-    
+
     setIsSubmitting(true);
     if (onAddAttachment) {
       const success = await onAddAttachment(attachmentDescription, attachmentFiles);
@@ -262,7 +263,7 @@ export function ActivityTimeline({
       toast.error("Please fill in required fields");
       return;
     }
-    
+
     setIsSubmitting(true);
     if (onAddMeeting) {
       const success = await onAddMeeting(meetingTitle.trim(), meetingDate, meetingTime, meetingLocation, meetingNotes);
@@ -292,7 +293,7 @@ export function ActivityTimeline({
       toast.error("Please fill in required fields");
       return;
     }
-    
+
     setIsSubmitting(true);
     if (onAddFollowup) {
       const success = await onAddFollowup(followupTitle.trim(), followupDate, followupTime, followupPriority, followupNotes);
@@ -395,7 +396,7 @@ export function ActivityTimeline({
               {timelineData.map((activity) => {
                 const Icon = timelineIcons[activity.type] || StickyNote;
                 const iconColor = timelineColors[activity.type] || "bg-muted-foreground";
-                
+
                 return (
                   <div key={activity.id} className="relative flex gap-4">
                     <div className={cn("relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0 shadow-md", iconColor)}>
@@ -404,8 +405,8 @@ export function ActivityTimeline({
 
                     <div className="flex-1 min-w-0 pb-1">
                       <p className="text-xs text-muted-foreground mb-1">
-                        {activity.rawTime 
-                          ? `${activity.rawTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} at ${activity.rawTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}` 
+                        {activity.rawTime
+                          ? `${activity.rawTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} at ${activity.rawTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`
                           : activity.time}
                       </p>
 
@@ -428,16 +429,16 @@ export function ActivityTimeline({
 
                       {activity.type === 'voicenote' && activity.audioUrl && (
                         <div className="mt-3 flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
-                          <audio 
-                            src={activity.audioUrl} 
-                            controls 
+                          <audio
+                            src={activity.audioUrl}
+                            controls
                             className="flex-1 h-9"
                             style={{ minWidth: 0 }}
                           />
                           <span className="text-xs text-muted-foreground font-medium shrink-0">{activity.duration || '0:00'}</span>
-                          <a 
-                            href={activity.audioUrl} 
-                            download 
+                          <a
+                            href={activity.audioUrl}
+                            download
                             className="shrink-0"
                           >
                             <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
@@ -473,7 +474,7 @@ export function ActivityTimeline({
                           })}
                         </div>
                       )}
-                      
+
                       {/* Attachments count badge */}
                       {activity.attachments && activity.attachments > 0 && !activity.attachmentsList && (
                         <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
@@ -510,7 +511,7 @@ export function ActivityTimeline({
                 className="min-h-[120px]"
               />
             </div>
-            
+
             {/* File attachments */}
             <div className="space-y-2">
               <Label>Attachments (optional)</Label>
@@ -530,7 +531,7 @@ export function ActivityTimeline({
                 <Upload className="h-4 w-4 mr-2" />
                 Add Files
               </Button>
-              
+
               {noteFiles.length > 0 && (
                 <div className="space-y-2 mt-2">
                   {noteFiles.map((file, index) => {
@@ -729,7 +730,7 @@ export function ActivityTimeline({
                 <p className="text-sm text-muted-foreground">Click to upload files</p>
                 <p className="text-xs text-muted-foreground/60 mt-1">PDF, Images, Documents</p>
               </div>
-              
+
               {attachmentFiles.length > 0 && (
                 <div className="space-y-2 mt-3">
                   {attachmentFiles.map((file, index) => {
@@ -754,7 +755,7 @@ export function ActivityTimeline({
                 </div>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label>Description (optional)</Label>
               <Textarea
