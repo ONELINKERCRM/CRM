@@ -57,7 +57,7 @@ export interface Lead {
 }
 
 export function useLeads() {
-  const { refreshSession } = useAuth();
+  const { refreshSession, user, profile } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,6 +69,13 @@ export function useLeads() {
     // #endregion
     setIsLoading(true);
     setError(null);
+
+    // Don't fetch if no user or profile
+    if (!user || !profile?.company_id) {
+      setIsLoading(false);
+      setLeads([]);
+      return;
+    }
 
     // Fetch all leads - override Supabase's default 1000 row limit
     const { data, error: fetchError } = await supabase
@@ -95,6 +102,7 @@ export function useLeads() {
           is_lost
         )
       `)
+      .eq('company_id', profile.company_id) // Filter by company_id
       .order("created_at", { ascending: false })
       .limit(10000); // Explicitly set higher limit to get all leads
 
@@ -126,7 +134,7 @@ export function useLeads() {
       setLeads((data as Lead[]) || []);
     }
     setIsLoading(false);
-  }, [refreshSession]);
+  }, [refreshSession, user, profile]);
 
   useEffect(() => {
     // #region agent log

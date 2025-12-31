@@ -118,6 +118,7 @@ export function AddLeadDialog({ children, open: controlledOpen, onOpenChange, on
       toast.success("Lead created successfully!", {
         description: `${data.name} has been added.`,
       });
+      form.reset();
       setOpen(false);
       onLeadAdded?.();
     } catch (error: unknown) {

@@ -61,7 +61,7 @@ const mobileTransition: Transition = {
 export function PageTransition({ children }: PageTransitionProps) {
   const isMobile = useIsMobile();
   const location = useLocation();
-  
+
   useEffect(() => {
     previousPath = location.pathname;
   }, [location.pathname]);

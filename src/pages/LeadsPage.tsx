@@ -1438,7 +1438,7 @@ function LeadsPageContent() {
         onImport={handleContactsImport}
       />
       {/* Add Lead Dialog for Desktop */}
-      <AddLeadDialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen} />
+      <AddLeadDialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen} onLeadAdded={refetch} />
       {/* Reassign Leads Dialog */}
       <ReassignLeadsDialog
         open={isReassignOpen}
