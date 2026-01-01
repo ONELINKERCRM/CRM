@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import type { Json } from "@/integrations/supabase/types";
 
 export interface Lead {
@@ -62,13 +63,25 @@ export interface Lead {
 }
 
 export function useLead(leadId: string | undefined) {
+  const { user, isLoading: authLoading } = useAuth();
   const [lead, setLead] = useState<Lead | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchLead = async () => {
+    // Wait for auth to initialize
+    if (authLoading) {
+      return;
+    }
+
     if (!leadId) {
       setIsLoading(false);
+      return;
+    }
+
+    if (!user) {
+      setIsLoading(false);
+      setError("User not authenticated");
       return;
     }
 
@@ -113,7 +126,7 @@ export function useLead(leadId: string | undefined) {
 
   useEffect(() => {
     fetchLead();
-  }, [leadId]);
+  }, [leadId, user, authLoading]);
 
   const refetch = async () => {
     await fetchLead();

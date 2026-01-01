@@ -7,7 +7,6 @@ type Profile = {
   id: string;
   first_name: string | null;
   last_name: string | null;
-  avatar_url: string | null;
   onboarding_completed: boolean;
   company_id: string | null;
   dashboard_preferences: any;
@@ -38,18 +37,91 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, first_name, last_name, avatar_url, onboarding_completed, company_id, dashboard_preferences")
+        .select("id, first_name, last_name, onboarding_completed, company_id, dashboard_preferences")
         .eq("id", userId)
-        .single();
+        .maybeSingle(); // Use maybeSingle instead of single to avoid error if no row exists
 
-      if (!error && data) {
+      if (error) {
+        console.error('Error fetching profile:', error);
+        if (error?.code === 'PGRST301' || error?.message?.includes('JWT')) {
+          // JWT expired, try to refresh
+          await refreshSession();
+        }
+        return;
+      }
+
+      if (data) {
+        // If profile exists but has no company_id, create a default one
+        if (!data.company_id) {
+          try {
+            // Create a default company for this user
+            const { data: newCompany, error: companyError } = await supabase
+              .from('companies')
+              .insert({
+                name: `${data.first_name || 'User'}'s Company`,
+                created_by: userId,
+                country: 'AE',
+                industry: 'Real Estate'
+              })
+              .select()
+              .single();
+
+            if (!companyError && newCompany) {
+              // Update profile with new company_id
+              const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ company_id: newCompany.id })
+                .eq('id', userId);
+
+              if (!updateError) {
+                data.company_id = newCompany.id;
+              }
+            }
+          } catch (companyErr) {
+            console.error('Error creating default company:', companyErr);
+          }
+        }
         setProfile(data);
-      } else if (error?.code === 'PGRST301' || error?.message?.includes('JWT')) {
-        // JWT expired, try to refresh
-        await refreshSession();
+      } else {
+        // Profile doesn't exist, create one with a default company
+        try {
+          // First create a company
+          const { data: newCompany, error: companyError } = await supabase
+            .from('companies')
+            .insert({
+              name: 'My Company',
+              created_by: userId,
+              country: 'AE',
+              industry: 'Real Estate'
+            })
+            .select()
+            .single();
+
+          if (companyError) {
+            console.error('Error creating company:', companyError);
+            return;
+          }
+
+          // Then create the profile
+          const { data: newProfile, error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: userId,
+              company_id: newCompany.id,
+              onboarding_completed: false
+            })
+            .select()
+            .single();
+
+          if (!profileError && newProfile) {
+            setProfile(newProfile);
+          }
+        } catch (createErr) {
+          console.error('Error creating profile:', createErr);
+        }
       }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Error in fetchProfile:', error);
     }
   };
 

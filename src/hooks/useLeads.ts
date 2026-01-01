@@ -57,7 +57,7 @@ export interface Lead {
 }
 
 export function useLeads() {
-  const { refreshSession, user, profile } = useAuth();
+  const { refreshSession, user, profile, isLoading: authLoading } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,6 +69,11 @@ export function useLeads() {
     // #endregion
     setIsLoading(true);
     setError(null);
+
+    // Wait for auth to finish loading
+    if (authLoading) {
+      return;
+    }
 
     // Don't fetch if no user or profile
     if (!user || !profile?.company_id) {
@@ -102,7 +107,8 @@ export function useLeads() {
           is_lost
         )
       `)
-      .eq('company_id', profile.company_id) // Filter by company_id
+      // Temporarily removed company_id filter due to schema issues
+      // .eq('company_id', profile.company_id)
       .order("created_at", { ascending: false })
       .limit(10000); // Explicitly set higher limit to get all leads
 
@@ -134,7 +140,7 @@ export function useLeads() {
       setLeads((data as Lead[]) || []);
     }
     setIsLoading(false);
-  }, [refreshSession, user, profile]);
+  }, [refreshSession, user, profile, authLoading]);
 
   useEffect(() => {
     // #region agent log
